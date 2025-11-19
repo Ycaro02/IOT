@@ -1,0 +1,29 @@
+Vagrant.configure("2") do |config|
+	config.vm.box = "albgarci42/alpine-322"
+    config.vm.box_version = "1"
+
+	config.vm.provision "shell", inline: <<-SHELL
+		apk add --no-cache curl
+	SHELL
+
+    config.vm.synced_folder ".", "/vagrant", type: "rsync"
+
+	config.vm.define "nfourS" do |control|
+	  control.vm.hostname = "nfourS"
+	  control.vm.network "private_network", ip: "192.168.56.110"
+	  control.vm.provider "libvirt" do |libvirt|
+		  libvirt.memory = "1024"
+		  libvirt.cpus = 1
+
+    #   libvirt.management_network_device = false
+        #   libvirt.autostart = false
+        #   libvirt.default_network = false
+	  end
+	  control.vm.provision "shell", path: "./vagrant/setup.sh", args: ["server"]
+	end
+
+  end
+
+
+
+
