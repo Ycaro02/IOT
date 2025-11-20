@@ -10,9 +10,16 @@ else
     exit 1
 fi
 
-echo "alias k=' '" >> /home/vagrant/.bashrc
+echo "alias k='kubectl'" >> /home/vagrant/.bashrc
 
-until curl localhost 2>/dev/null | grep -i "404 page not found"; do
+# until curl localhost 2>/dev/null | grep -i "404 page not found"; do
+# get pod -n kube-system | grep traefik | grep Running | wc -l
+until false; do
+    count=$(kubectl get pod -n kube-system 2>/dev/null | grep traefik | grep Running | wc -l)
+    if [ "${count}" == "2" ]; then
+        echo "k3s and traefik are ready."
+        break
+    fi
      echo "Waiting for k3s and traefik to be ready..."
      sleep 5
 done
