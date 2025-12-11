@@ -95,7 +95,7 @@ function create_gitlab_repo {
     curl -s -X PUT "http://gitlab.localhost/api/v4/projects/$(curl -s -H "PRIVATE-TOKEN: my-token-cli" "http://gitlab.localhost/api/v4/projects" | jq -r '.[] | select(.name=="test-repo") | .id')"      -H "PRIVATE-TOKEN: my-token-cli"      -F "visibility=public"
 
     # Clone the p3 app repo
-    git clone https://github.com/Ycaro02/IOT-app /tmp/github_app 2>&1
+    git clone https://github.com/Ycaro02/nfour-IOT-app /tmp/github_app 2>&1
 
     # Clone the new GitLab repository
     git clone http://oauth2:my-token-cli@gitlab.localhost/root/test-repo /tmp/gitlab_repo 2>&1

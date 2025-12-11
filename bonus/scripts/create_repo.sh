@@ -29,7 +29,7 @@ curl -X PUT "http://gitlab.localhost/api/v4/projects/$(curl -s -H "PRIVATE-TOKEN
 
 rm -rf /tmp/gitlab_repo /tmp/github_app
 
-git clone https://github.com/Ycaro02/IOT-app /tmp/github_app
+git clone https://github.com/Ycaro02/nfour-IOT-app /tmp/github_app
 git clone http://oauth2:mon-token-cli@gitlab.localhost/root/test-repo /tmp/gitlab_repo
 
 
