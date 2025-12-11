@@ -1,29 +1,18 @@
 Vagrant.configure("2") do |config|
-	config.vm.box = "albgarci42/alpine-322"
-    config.vm.box_version = "1"
+	config.vm.define "nfourS" do |nfourS|
+		nfourS.vm.box = "albgarci42/alpine-322"
+		nfourS.vm.box_version = "1"
 
-	config.vm.provision "shell", inline: <<-SHELL
-		apk add --no-cache curl
-	SHELL
+		nfourS.vm.hostname = "nfourS"
+		nfourS.vm.network "private_network", ip: "192.168.56.110"
+		config.vm.synced_folder ".", "/vagrant", type: "rsync"
 
-    config.vm.synced_folder ".", "/vagrant", type: "rsync"
+		nfourS.vm.provider :libvirt do |libvirt|
+			libvirt.memory = 1024
+			libvirt.cpus = 1
+		end
 
-	config.vm.define "nfourS" do |control|
-	  control.vm.hostname = "nfourS"
-	  control.vm.network "private_network", ip: "192.168.56.110"
-	  control.vm.provider "libvirt" do |libvirt|
-		  libvirt.memory = "1024"
-		  libvirt.cpus = 1
-
-    #   libvirt.management_network_device = false
-        #   libvirt.autostart = false
-        #   libvirt.default_network = false
-	  end
-	  control.vm.provision "shell", path: "./vagrant/setup.sh", args: ["server"]
+		nfourS.vm.provision "shell", path: "scripts/install_k3s.sh"
+		nfourS.vm.provision "shell", path: "scripts/deploy_app.sh"
 	end
-
-  end
-
-
-
-
+end

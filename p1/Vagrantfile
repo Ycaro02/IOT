@@ -1,32 +1,33 @@
 Vagrant.configure("2") do |config|
-	config.vm.box = "generic/alpine319"
+	config.vm.define "nfourS" do |nfourS|
+		nfourS.vm.box = "albgarci42/alpine-322"
+		nfourS.vm.box_version = "1"
 
-	config.vm.provision "shell", inline: <<-SHELL
-		apk add --no-cache curl
-	SHELL
+		nfourS.vm.hostname = "nfourS"
+		nfourS.vm.network "private_network", ip: "192.168.56.110"
+		nfourS.vm.synced_folder ".", "/vagrant", disabled: true
 
-	config.vm.define "nfourS" do |control|
-	  control.vm.hostname = "nfourS"
-	  control.vm.network "private_network", ip: "192.168.56.110"
-	  control.vm.provider "libvirt" do |libvirt|
-		  libvirt.memory = "1024"
-		  libvirt.cpus = 1
-	  end
-	  control.vm.provision "shell", path: "./vagrant/setup.sh", args: ["server"]
+		nfourS.vm.provider :libvirt do |libvirt|
+			libvirt.memory = 1024
+			libvirt.cpus = 1
+		end
+
+		nfourS.vm.provision "shell", path: "scripts/install_k3s.sh", args: "server"
 	end
+	
+	config.vm.define "nfourSW" do |nfourSW|
+		nfourSW.vm.box = "albgarci42/alpine-322"
+		nfourSW.vm.box_version = "1"
 
-    config.vm.define "nfourSW" do |control|
-	  control.vm.hostname = "nfourSW"
-	  control.vm.network "private_network", ip: "192.168.56.111"
-	  control.vm.provider "libvirt" do |libvirt|
-		  libvirt.memory = "1024"
-		  libvirt.cpus = 1
-	  end
-	  control.vm.provision "shell", path: "./vagrant/setup.sh", args: ["agent"]
+		nfourSW.vm.hostname = "nfourSW"
+		nfourSW.vm.network "private_network", ip: "192.168.56.111"
+		nfourSW.vm.synced_folder ".", "/vagrant", disabled: true
+
+		nfourSW.vm.provider :libvirt do |libvirt|
+			libvirt.memory = 1024
+			libvirt.cpus = 1
+		end
+
+		nfourSW.vm.provision "shell", path: "scripts/install_k3s.sh", args: "agent"
 	end
-
-  end
-
-
-
-
+end
